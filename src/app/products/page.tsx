@@ -9,11 +9,25 @@ export const metadata: Metadata = {
 };
 
 type ProductsPageProps = {
-  searchParams: Promise<{ sort?: string; page?: string }>;
+  searchParams: Promise<{
+    sort?: string;
+    page?: string;
+    category?: string;
+    min?: string;
+    max?: string;
+    search?: string;
+  }>;
 };
 
 const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
-  const { sort = "asc", page = "1" } = await searchParams;
+  const {
+    sort = "asc",
+    page = "1",
+    category = "",
+    min = "",
+    max = "",
+    search = "",
+  } = await searchParams;
   const safeSort = sort === "desc" ? "desc" : "asc";
   let products: Product[] = [];
   let categories: string[] = [];
@@ -33,6 +47,10 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
         products={products}
         categories={categories}
         initialPage={Number(page) > 0 ? Number(page) : 1}
+        initialCategory={category}
+        initialMinPrice={min}
+        initialMaxPrice={max}
+        initialSearch={search}
         sort={safeSort}
       />
     </div>

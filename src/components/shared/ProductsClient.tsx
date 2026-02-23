@@ -13,6 +13,10 @@ type ProductsClientProps = {
   products: Product[];
   categories: string[];
   initialPage: number;
+  initialCategory: string;
+  initialMinPrice: string;
+  initialMaxPrice: string;
+  initialSearch: string;
   sort: "asc" | "desc";
 };
 
@@ -20,14 +24,18 @@ const ProductsClient = ({
   products,
   categories,
   initialPage,
+  initialCategory,
+  initialMinPrice,
+  initialMaxPrice,
+  initialSearch,
   sort,
 }: ProductsClientProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [minPrice, setMinPrice] = useState(initialMinPrice);
+  const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
+  const [search, setSearch] = useState(initialSearch);
   const [currentPage, setCurrentPage] = useState(initialPage);
 
   const filteredProducts = useMemo(() => {
@@ -59,6 +67,18 @@ const ProductsClient = ({
     router.push(`/products?${params.toString()}`);
   };
 
+  const updateFilterParam = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    params.set("page", "1");
+    router.push(`/products?${params.toString()}`);
+    setCurrentPage(1);
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     const params = new URLSearchParams(searchParams.toString());
@@ -72,6 +92,13 @@ const ProductsClient = ({
     setMaxPrice("");
     setSearch("");
     setCurrentPage(1);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("category");
+    params.delete("min");
+    params.delete("max");
+    params.delete("search");
+    params.set("page", "1");
+    router.push(`/products?${params.toString()}`);
   };
 
   return (
@@ -99,10 +126,22 @@ const ProductsClient = ({
               minPrice={minPrice}
               maxPrice={maxPrice}
               search={search}
-              onCategoryChange={setSelectedCategory}
-              onMinPriceChange={setMinPrice}
-              onMaxPriceChange={setMaxPrice}
-              onSearchChange={setSearch}
+              onCategoryChange={(value) => {
+                setSelectedCategory(value);
+                updateFilterParam("category", value);
+              }}
+              onMinPriceChange={(value) => {
+                setMinPrice(value);
+                updateFilterParam("min", value);
+              }}
+              onMaxPriceChange={(value) => {
+                setMaxPrice(value);
+                updateFilterParam("max", value);
+              }}
+              onSearchChange={(value) => {
+                setSearch(value);
+                updateFilterParam("search", value);
+              }}
               onClear={handleClear}
             />
           </div>
