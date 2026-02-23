@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addItem, updateQuantity } from "@/store/slices/cartSlice";
@@ -48,8 +49,9 @@ const ProductCard = ({ product, href }: ProductCardProps) => {
         <p className="font-medium line-clamp-2">{product.title}</p>
         <div className="flex items-center justify-between text-sm">
           <span className="font-semibold">${product.price.toFixed(2)}</span>
-          <span className="text-muted-foreground">
-            {product.rating.rate} ★ ({product.rating.count})
+          <span className="flex items-center gap-1 text-muted-foreground">
+            <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+            {product.rating.rate} ({product.rating.count})
           </span>
         </div>
       </div>

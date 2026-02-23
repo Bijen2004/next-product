@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import ProductsClient from "@/components/shared/ProductsClient";
 import { getCategories, getProducts } from "@/lib/fakeStore";
 import type { Product } from "@/types/product";
+
+export const metadata: Metadata = {
+  title: "Products | Fake Store",
+  description: "Browse products from the Fake Store catalog.",
+};
 
 type ProductsPageProps = {
   searchParams: Promise<{ sort?: string; page?: string }>;
